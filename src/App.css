@@ -9,6 +9,12 @@ height: 100%;
 background: rgb(25, 25, 25)
 }
 
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
 #root {
   width: 100%;
   height: 100%;
