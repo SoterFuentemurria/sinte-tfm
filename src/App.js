@@ -166,6 +166,7 @@ const [numeroMenu, setNumeroMenu] = react.useState()
 async function iniciar() {
     await Tone.start()
     console.log("ready")
+    document.documentElement.requestFullscreen()
     setReady(true)
 }
 
