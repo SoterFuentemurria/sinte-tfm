@@ -176,8 +176,7 @@ if (orientation === "Portrait") {
     return(<h1 id="apaisado"> Pon el teléfono en apaisado</h1>)
 } else {
 
-    window.scrollTo(0,5000)
-    window.onscroll = function() {window.scrollBy(0,0)}
+
 
 if (!ready) {
     return(
