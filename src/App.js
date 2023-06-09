@@ -81,6 +81,11 @@ let paramY6 = react.useRef(null)
 
 let numeroXY = react.useRef(null)
 
+let displayTipoFiltro = react.useRef(null)
+
+let bitcrusherON = react.useRef(null)
+let reverbON = react.useRef(null)
+
 
 
 function getOrientation(){
@@ -114,6 +119,10 @@ react.useEffect(()=> {
     paramY4.current = ""
     paramY5.current = ""
     paramY6.current = ""
+
+    displayTipoFiltro.current = "Elige el tipo de filtro"
+    reverbON.current = false
+    bitcrusherON.current = false
 
     getOrientation()
 }, [])
@@ -250,7 +259,8 @@ return (
     fuente4 = {fuente4} fuente5 = {fuente5} fuente6 = {fuente6} filtro1 = {filtro1} filtro2 = {filtro2} filtro3 = {filtro3} 
     filtro4 = {filtro4} filtro5 = {filtro5} filtro6 = {filtro6} bitcrusher1 = {bitcrusher1}  bitcrusher2 = {bitcrusher2} 
     bitcrusher3 = {bitcrusher3}  bitcrusher4 = {bitcrusher4}  bitcrusher5 = {bitcrusher5}  bitcrusher6 = {bitcrusher6} 
-    reverb1 = {reverb1} reverb2 = {reverb2} reverb3 = {reverb3} reverb4 = {reverb4} reverb5 = {reverb5} reverb6 = {reverb6}/>)
+    reverb1 = {reverb1} reverb2 = {reverb2} reverb3 = {reverb3} reverb4 = {reverb4} reverb5 = {reverb5} reverb6 = {reverb6} 
+    displayTipoFiltro = {displayTipoFiltro} bitcrusherON = {bitcrusherON} reverbON = {reverbON}/>)
 }
 }}}}
 
@@ -287,10 +297,26 @@ function Pad(props){
         modISeteado = props.fuente.current.modulationIndex.value
     }
     
-    let cutoffSeteado = props.filtro.current.frequency.value
-    let decaySeteado = props.reverb.current.decay
-    let bitsSeteado = props.bitcrusher.current.bits.value
-    let wetSeteado = props.reverb.current.wet.value
+    let cutoffSeteado 
+    if (props.filtro.current !== null){
+    if (props.filtro.current.frequency.value !== undefined) {
+        cutoffSeteado = props.filtro.current.frequency.value
+    }}
+
+    let decaySeteado 
+    let wetSeteado 
+    if (props.reverb.current !== null) {
+    if (props.reverb.current.roomSize !== undefined) {
+        decaySeteado = props.reverb.current.roomSize
+        wetSeteado = props.reverb.current.wet.value
+    }}
+
+    let bitsSeteado
+    if (props.bitcrusher.current !== null) {
+    if (props.bitcrusher.current.order.value !== undefined) {
+        bitsSeteado = props.bitcrusher.current.order.value
+    }}
+    
 
 
 
@@ -368,11 +394,11 @@ function Pad(props){
         }
         if (props.paramX.current === "bits") {
             let bits = convertRange(toque[0], rangox, [1, bitsSeteado])
-            props.bitcrusher.current.set({bits: bits})
+            props.bitcrusher.current.set({order: bits})
         }
         if (props.paramY.current === "bits") {
             let bits = convertRange(toque[1], rangoy, [1, bitsSeteado])
-            props.bitcrusher.current.set({bits: bits})
+            props.bitcrusher.current.set({order: bits})
         }
         if (props.paramX.current === "tiempo") {
             let decay = convertRange(toque[0], rangox, [0.001, decaySeteado])
@@ -392,11 +418,7 @@ function Pad(props){
         }
 
 
-        console.log(props.fuente.current.get())
-        console.log(props.filtro.current.get())
-        console.log(props.reverb.current.get())
-        console.log(props.bitcrusher.current.get())
-        console.log(window["nota" + props.numeroPad])
+       
 
         
         
@@ -454,11 +476,11 @@ function Pad(props){
         }
         if (props.paramX.current === "bits") {
             let bits = convertRange(toque[0], rangox, [1, bitsSeteado])
-            props.bitcrusher.current.set({bits: bits})
+            props.bitcrusher.current.set({order: bits})
         }
         if (props.paramY.current === "bits") {
             let bits = convertRange(toque[1], rangoy, [1, bitsSeteado])
-            props.bitcrusher.current.set({bits: bits})
+            props.bitcrusher.current.set({order: bits})
         }
       
         if (props.paramX.current === "wet") {
@@ -618,7 +640,8 @@ function Menu(props) {
             filtro4 = {props.filtro4} filtro5 = {props.filtro5} filtro6 = {props.filtro6} bitcrusher1 = {props.bitcrusher1}  
             bitcrusher2 = {props.bitcrusher2} bitcrusher3 = {props.bitcrusher3}  bitcrusher4 = {props.bitcrusher4}  
             bitcrusher5 = {props.bitcrusher5}  bitcrusher6 = {props.bitcrusher6} reverb1 = {props.reverb1} reverb2 = {props.reverb2} 
-            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6}/>
+            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6} 
+            displayTipoFiltro = {props.displayTipoFiltro} bitcrusherON = {props.bitcrusherON} reverbON = {props.reverbON}/>
         </div>)
 }
 
@@ -647,7 +670,8 @@ function DisplayMenu(props) {
             filtro4 = {props.filtro4} filtro5 = {props.filtro5} filtro6 = {props.filtro6} bitcrusher1 = {props.bitcrusher1}  
             bitcrusher2 = {props.bitcrusher2} bitcrusher3 = {props.bitcrusher3}  bitcrusher4 = {props.bitcrusher4}  
             bitcrusher5 = {props.bitcrusher5}  bitcrusher6 = {props.bitcrusher6} reverb1 = {props.reverb1} reverb2 = {props.reverb2} 
-            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6}/>)
+            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6} 
+            displayTipoFiltro = {props.displayTipoFiltro} />)
     }
     if (props.pestaña === "Efectos"){
         return(<MenuEfectos numeroMenu = {props.numeroMenu} fuente1 = {props.fuente1} fuente2 = {props.fuente2} fuente3 = {props.fuente3} fuente4 = {props.fuente4} 
@@ -655,7 +679,8 @@ function DisplayMenu(props) {
             filtro4 = {props.filtro4} filtro5 = {props.filtro5} filtro6 = {props.filtro6} bitcrusher1 = {props.bitcrusher1}  
             bitcrusher2 = {props.bitcrusher2} bitcrusher3 = {props.bitcrusher3}  bitcrusher4 = {props.bitcrusher4}  
             bitcrusher5 = {props.bitcrusher5}  bitcrusher6 = {props.bitcrusher6} reverb1 = {props.reverb1} reverb2 = {props.reverb2} 
-            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6}/>)
+            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6}
+            bitcrusherON = {props.bitcrusherON} reverbON = {props.reverbON}/>)
     }
 }
 
@@ -699,7 +724,50 @@ function MenuFuenteSonora(props) {
     function abrirSinte() {
         setSinteSampler("Sinte")
         fuente.current.dispose()
-        fuente.current = new Tone.FMSynth({volume: -6, modulationEnvelope: {attack: 0.01}}).toDestination()
+        fuente.current = new Tone.FMSynth({volume: -6, modulationEnvelope: {attack: 0.01}})
+        
+
+        if (filtro.current !== null && filtro.current.disposed === false) {
+
+            fuente.current.connect(filtro.current)
+
+            if (((bitcrusher.current !== null) && (bitcrusher.current.disposed === false)) && ((reverb.current !== null) && (reverb.current.disposed === false))) {
+
+                filtro.current.chain(bitcrusher.current, reverb.current, Tone.Destination)
+
+            } else {
+
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    filtro.current.chain(reverb.current, Tone.Destination)
+                } else { if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    filtro.current.chain(bitcrusher.current, Tone.Destination)
+                } else {
+                    filtro.current.toDestination()
+                }
+                }
+            }
+
+        } else {
+
+            if (((bitcrusher.current !== null) && (bitcrusher.current.disposed === false)) && ((reverb.current !== null) && (reverb.current.disposed === false))) {
+                
+                fuente.current.chain(bitcrusher.current, reverb.current, Tone.Destination)
+
+            } else {
+
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    
+                    fuente.current.chain(reverb.current, Tone.Destination)
+                } else { if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    
+                    fuente.current.chain(bitcrusher.current, Tone.Destination)
+                } else {
+                    fuente.current.toDestination()
+                }
+                }
+            }
+            
+        }
     }
 
     function abrirSampler() {
@@ -768,7 +836,13 @@ function MenuSinte(props) {
     //fuente.dispose()
     //fuente.connect(Tone.Destination)
     
-    
+    react.useEffect(() => {
+        if (fuente.current !== null) {
+            setDisplayHarm(fuente.current.harmonicity.value)
+            setDisplayModI(fuente.current.modulationIndex.value)
+        }
+    }, [])
+
     function cambioNota(e) {
         
         window["nota" +  props.numeroMenu] = e.target.value
@@ -867,7 +941,7 @@ function MenuSampler(props) {
 
     async function buscar () {
 
-        let url = "https://freesound.org/apiv2/search/text/?query=" + busqueda + "&sort=score" + "&filter=duration:[* TO 10]"+ "&token="  + claveAPI 
+        let url = "https://freesound.org/apiv2/search/text/?query=" + busqueda + "&sort=score&filter=duration:[* TO 10]&token="  + claveAPI 
         resultados.current = await (await fetch(url)).json()
         setSeleccionSample(true)
         
@@ -908,6 +982,15 @@ function MenuADSR(props) {
     if (props.numeroMenu === 4) {fuente = props.fuente4}
     if (props.numeroMenu === 5) {fuente = props.fuente5}
     if (props.numeroMenu === 6) {fuente = props.fuente6}
+
+    react.useEffect(()=> {
+        if (fuente.current !== null ) {
+            setDisplayAtaque(fuente.current.envelope.attack)
+            setDisplayDecay(fuente.current.envelope.decay)
+            setDisplaySustain(fuente.current.envelope.sustain)
+            setDisplayRelease(fuente.current.envelope.release)
+        }
+    }, [])
 
     function cambioAtaque(e) {
         let valor = e.target.value / 100
@@ -966,6 +1049,12 @@ function MenuFiltros(props) {
     let bitcrusher
     const [displayF, setDisplayF] = react.useState(0)
     const [Q, setQ] = react.useState(50)
+    let displayTipoFiltro = props.displayTipoFiltro
+
+    
+    
+
+    
 
 
     if (props.numeroMenu === 1) {fuente = props.fuente1}
@@ -996,6 +1085,15 @@ function MenuFiltros(props) {
     if (props.numeroMenu === 5) {reverb = props.reverb5}
     if (props.numeroMenu === 6) {reverb = props.reverb6}
 
+    react.useEffect(()=>{
+        if (filtro.current !== null) {
+            setDisplayF(filtro.current.frequency.value)
+            setQ(filtro.current.Q.value)
+        } 
+    }, [])
+    
+    
+
     function cambioQ(e) {
         filtro.current.set({
             Q: e.target.value
@@ -1004,37 +1102,50 @@ function MenuFiltros(props) {
     }
 
     function cambioTipo(e) {
-        filtro.current = new Tone.BiquadFilter({type: e.target.value, gain:12})
 
-        if (filtro.current !== undefined || filtro.current.type === "" || e.target.value === "") {
-
+        if (e.target.value !== "") {
+            filtro.current = new Tone.BiquadFilter({type: e.target.value, gain:12})
+            if (e.target.value === "lowpass") {displayTipoFiltro.current = "Pasa-bajos"}
+            if (e.target.value === "highpass") {displayTipoFiltro.current = "Pasa-altos"}
+            if (e.target.value === "bandpass") {displayTipoFiltro.current = "Pasa-banda"}
+            if (e.target.value === "peaking") {displayTipoFiltro.current = "Pico"}
+            if (e.target.value === "notch") {displayTipoFiltro.current = "Notch"}
+            
+        } else {
+            displayTipoFiltro.current = "Elige el tipo de filtro"
             filtro.current.dispose()
             fuente.current.disconnect()
-            if(bitcrusher.current !== undefined) {
+            if(bitcrusher.current !== null && bitcrusher.current.disposed === false) {
                 fuente.current.connect(bitcrusher.current)
-                if(reverb.current !== undefined){
+                if(reverb.current !== null && reverb.current.disposed === false){
                     bitcrusher.current.chain(reverb.current, Tone.Destination)
                 } else {
                     bitcrusher.current.toDestination()
                 }
             } else {
-                if (reverb.current !== undefined) {
+                if (reverb.current !== null && reverb.current.disposed === false) {
                     fuente.current.chain(reverb.current, Tone.Destination)
                 } else {
                     fuente.current.connect(Tone.Destination)
                 }
             }
+        }
+        
+
+        if (filtro.current !== null && filtro.current.disposed === false && e.target.value !== "") {
+
+           
             
-            if (filtro.current !== "" || filtro.current.type !== "") {
+            if (e.target.value !== "" || filtro.current.type !== "") {
 
                 fuente.current.disconnect()
                 filtro.current.disconnect()
                 fuente.current.connect(filtro.current)
 
-                if(bitcrusher.current !== undefined) {
+                if(bitcrusher.current !== null && bitcrusher.current.disposed === false) {
                     bitcrusher.current.disconnect()
                     filtro.current.connect(bitcrusher.current)
-                    if(reverb.current !== undefined){
+                    if(reverb.current !== null && reverb.current.disposed === false){
                         reverb.current.disconnect()
                         bitcrusher.current.chain(reverb.current, Tone.Destination)
                     } else {
@@ -1042,15 +1153,15 @@ function MenuFiltros(props) {
                         bitcrusher.current.toDestination()
                     }
                 } else {
-                    if (reverb.current !== undefined) {
+                    if (reverb.current !== null && reverb.current.disposed === false)  {
                         filtro.current.chain(reverb.current, Tone.Destination)
                     } else {
                         filtro.current.connect(Tone.Destination)
                     }
                 }
         
-                console.log(filtro.current.get())
-            }   
+        
+            }
         }
     }
 
@@ -1060,7 +1171,6 @@ function MenuFiltros(props) {
         })
         setDisplayF(e.target.value) 
         
-        console.log(filtro.current.get())
     }
 
     return(
@@ -1073,12 +1183,13 @@ function MenuFiltros(props) {
             <div class = "label">
                 <label for= "tipoDeFiltro">Tipo</label>
                 <select id = "tipoDeFiltro" onChange={cambioTipo}>
-                    <option value = "">-</option>
+                    <option value = "">{displayTipoFiltro.current}</option>
                     <option value = "lowpass">Pasa-bajos</option>
                     <option value = "highpass">Pasa-altos</option>
                     <option value = "bandpass">Pasa-banda</option>
                     <option value = "peaking">Pico</option>
                     <option value = "notch">Notch</option>
+                    <option value = "">Quita el filtro</option>
                 </select>
             </div>
         </div>
@@ -1091,16 +1202,21 @@ function MenuFiltros(props) {
 
 // Efectos
 function MenuEfectos(props) {
+
+    // añadir dampening
+    // vincular todo el tema de los botones a estado
+
 let fuente
 let filtro
 let bitcrusher
 let reverb
-let botonBitcrusher
-let botonReverb
 
-const [displayBits, setDisplayBits] = react.useState(16)
+
+const [displayBits, setDisplayBits] = react.useState(1)
 const [displayDecay, setDisplayDecay] = react.useState(0.5)
 const [displayWet, setDisplayWet] = react.useState(50)
+const [reverbON, setReverbON] = react.useState(false)
+const [bitcrusherON, setBicrusherON] = react.useState(false)
 
 
 if (props.numeroMenu === 1) {fuente = props.fuente1}
@@ -1132,120 +1248,22 @@ if (props.numeroMenu === 5) {reverb = props.reverb5}
 if (props.numeroMenu === 6) {reverb = props.reverb6}
 
     react.useEffect(()=> {
-        botonReverb = document.getElementById("reverb")
-        botonBitcrusher = document.getElementById("bitcrusher")
-        
-    
+        if (reverb.current !== null) {
+            setDisplayWet(reverb.current.wet.value)
+            setDisplayDecay(reverb.current.roomSize.value)
+        } 
+        if (bitcrusher.current !== null) {
+            setDisplayBits(bitcrusher.current.order)
+        } 
     }, [])
   
     
 
-    function interruptorBitcrusher(e) {
-        if (botonBitcrusher.textContent === "Off") {
-            botonBitcrusher.textContent = "On"
-            botonBitcrusher.style.color = "green"
-            botonBitcrusher.style.border = "1vh solid green"
-            botonBitcrusher.style.backgroundColor = "rgb(25,25,25)"
+    
 
-            bitcrusher.current = new Tone.BitCrusher({wet:1})
-            fuente.current.disconnect()
-            filtro.current.disconnect()
-            reverb.current.disconnect()
-            if (filtro.current !== undefined) {
-                if (reverb.current !== undefined) {
-                    fuente.current.chain(filtro.current, bitcrusher.current, reverb.current, Tone.Destination)
-                } else {
-                    fuente.current.chain(filtro.current, bitcrusher.current, Tone.Destination)
-                }
-
-            } else {
-                fuente.current.connect(bitcrusher.current)
-                if (reverb.current !== undefined) {
-                    bitcrusher.current.chain(reverb.current, Tone.Destination)
-                } else {
-                    bitcrusher.current.toDestination()
-                }
-            }
-            
-        } else {
-            botonBitcrusher.textContent = "Off"
-            botonBitcrusher.style.color = "red"
-            botonBitcrusher.style.border = "1vh solid red"
-            botonBitcrusher.style.backgroundColor = "rgb(25,25,25)"
-            bitcrusher.dispose()
-            fuente.current.disconnect()
-            filtro.current.disconnect()
-            reverb.current.disconnect()
-            if (filtro.current !== undefined) {
-                if (reverb.current !== undefined) {
-                    fuente.current.chain(filtro.current,  reverb.current, Tone.Destination)
-                } else {
-                    fuente.current.chain(filtro.current, Tone.Destination)
-                }
-
-            } else {
-                if (reverb.current !== undefined) {
-                    fuente.current.chain(reverb.current, Tone.Destination)
-                } else {
-                    fuente.current.toDestination()
-                }
-            }
-        }
-
-    }
-
-    function interruptorReverb(e) {
-        if (botonReverb.textContent === "Off") {
-            botonReverb.textContent = "On"
-            botonReverb.style.color = "green"
-            botonReverb.style.border = "1vh solid green"
-            botonReverb.style.backgroundColor = "rgb(25,25,25)"
-            reverb.current = new Tone.JCReverb({wet:1})
-            fuente.current.disconnect()
-            filtro.current.disconnect()
-            bitcrusher.current.disconnect()
-            if (filtro.current !== undefined) {
-                if (bitcrusher.current !== undefined) {
-                    fuente.current.chain(filtro.current, bitcrusher.current, reverb.current, Tone.Destination)
-                } else {
-                    fuente.current.chain(filtro.current, reverb.current, Tone.Destination)
-                }
-
-            } else {
-                if (bitcrusher.current !== undefined) {
-                    fuente.current.chain(bitcrusher.current, reverb.current, Tone.Destination)
-                } else {
-                    fuente.current.chain(reverb.current, Tone.Destination)
-                }
-            }
-        } else {
-            botonReverb.textContent = "Off"
-            botonReverb.style.color = "red"
-            botonReverb.style.border = "1vh solid red"
-            botonReverb.style.backgroundColor = "rgb(25,25,25)"
-            reverb.dispose()
-            fuente.current.disconnect()
-            filtro.current.disconnect()
-            bitcrusher.current.disconnect()
-            if (filtro.current !== undefined) {
-                if (bitcrusher.current !== undefined) {
-                    fuente.current.chain(filtro.current,  bitcrusher.current, Tone.Destination)
-                } else {
-                    fuente.current.chain(filtro.current, Tone.Destination)
-                }
-
-            } else {
-                if (bitcrusher.current !== undefined) {
-                    fuente.current.chain(bitcrusher.current, Tone.Destination)
-                } else {
-                    fuente.current.toDestination()
-                }
-            }
-        }
-    }
-
+    
     function cambioBitcrusher(e) {
-        bitcrusher.current.set({bits: e.target.value})
+        bitcrusher.current.set({order: e.target.value})
         setDisplayBits(e.target.value)
     }
 
@@ -1264,23 +1282,20 @@ if (props.numeroMenu === 6) {reverb = props.reverb6}
     return(
     <div id= "efectos">
         <div id = "efectosRow1">
-            <div class = "label">
-                <label for = "bitcrusher" >Bitcrusher</label>
-                <button id = "bitcrusher" onClick={interruptorBitcrusher}>Off</button>
-            </div>
+            <BotonBitcrusher  bitcrusherONREF = {props.bitcrusherON} fuente = {fuente} 
+            filtro = {filtro} bitcrusher = {bitcrusher} reverb = {reverb}/>
             <div class = "label" id = "labelBits">
-                <label for= "bits">{displayBits + " bits"}</label>
-                <input id = "bits" type= "range" min = "0" max = "16" onChange={cambioBitcrusher}></input>
+                <label for= "bits">{"Cantidad = " + displayBits}</label>
+                <input id = "bits" type= "range" min = "0" max = "100" onChange={cambioBitcrusher}></input>
             </div>
         </div>
         <div id = "efectosRow2">
-            <div class = "label">
-                <label for = "reverb">Reverb</label>
-                <button id ="reverb" onClick={interruptorReverb}>Off</button>
-            </div>
+            <BotonReverb reverbONREF = {props.reverbON} 
+            fuente = {fuente} 
+            filtro = {filtro} bitcrusher = {bitcrusher} reverb = {reverb}/>
             <div class = "label" id = "labelDamp">
-                <label for = "dampening">{"Tiempo = " + displayDecay + "s"}</label>
-                <input id = "dampening" type= "range" min = "1" max = "1000" onChange={cambioDecay}></input>
+                <label for = "dampening">{"Tamaño = " + displayDecay}</label>
+                <input id = "dampening" type= "range" min = "1" max = "100" onChange={cambioDecay}></input>
             </div>
             <div class = "label" id = "labelRoom">    
                 <label for = "room">{"Cantidad = " + displayWet + "%"}</label>
@@ -1293,7 +1308,7 @@ if (props.numeroMenu === 6) {reverb = props.reverb6}
 }
 
 function MenuXY (props) {
-    console.log(props.numeroXY)
+    
     let paramX
     let paramY
 
@@ -1324,7 +1339,7 @@ function MenuXY (props) {
         paramY = props.paramY6
     }
 
-    console.log(paramX)
+   
 
     function cerrarMenuXY2 () {
         props.setXY2(false)
@@ -1385,7 +1400,7 @@ function ResultadosBusqueda(props) {
         id[i] = props.resultados.current.results[i].id
     }
 
-    console.log(nombres, id)
+    
    
     return (
     <div id = "menuResultados">
@@ -1464,14 +1479,64 @@ function ResultadosBusqueda(props) {
 }
 
 function BotonBusqueda(props) {
-    let fuente 
+    let fuente
+    let filtro = props.filtro
+    let bitcrusher = props.bitcrusher
+    let reverb = props.reverb
     
+    
+
     if (props.numeroMenu === 1) {fuente = props.fuente1}
     if (props.numeroMenu === 2) {fuente = props.fuente2}
     if (props.numeroMenu === 3) {fuente = props.fuente3}
     if (props.numeroMenu === 4) {fuente = props.fuente4}
     if (props.numeroMenu === 5) {fuente = props.fuente5}
     if (props.numeroMenu === 6) {fuente = props.fuente6}
+
+    function conectar() {
+        
+        if (filtro.current !== null && filtro.current.disposed === false) {
+
+            fuente.current.connect(filtro.current)
+
+            if (((bitcrusher.current !== null) && (bitcrusher.current.disposed === false)) && ((reverb.current !== null) && (reverb.current.disposed === false))) {
+
+                filtro.current.chain(bitcrusher.current, reverb.current, Tone.Destination)
+
+            } else {
+
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    filtro.current.chain(reverb.current, Tone.Destination)
+                } else { if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    filtro.current.chain(bitcrusher.current, Tone.Destination)
+                } else {
+                    filtro.current.toDestination()
+                }
+                }
+            }
+
+        } else {
+
+            if (((bitcrusher.current !== null) && (bitcrusher.current.disposed === false)) && ((reverb.current !== null) && (reverb.current.disposed === false))) {
+                
+                fuente.current.chain(bitcrusher.current, reverb.current, Tone.Destination)
+
+            } else {
+
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    
+                    fuente.current.chain(reverb.current, Tone.Destination)
+                } else { if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    
+                    fuente.current.chain(bitcrusher.current, Tone.Destination)
+                } else {
+                    fuente.current.toDestination()
+                }
+                }
+            }
+            
+        }
+    }
 
     fuente.current.dispose()
 
@@ -1480,7 +1545,7 @@ function BotonBusqueda(props) {
 
         fetch(url).then((response) => response.json()).then((value)=> 
             fuente.current = new Tone.Sampler({volume: 0, urls: {C4: value.previews["preview-hq-mp3"]}, 
-            onload: ()=> {console.log(props.setSeleccionSample(false))}}).connect(Tone.Destination))
+            onload: ()=> {console.log(props.setSeleccionSample(false))}})).then(()=> conectar())
               
     }
     
@@ -1492,4 +1557,190 @@ function BotonBusqueda(props) {
 
 
 
-/// Pasar filtros y efectos como props para reconstruir la cadena. 
+function BotonReverb(props){
+
+    let fuente = props.fuente
+    let filtro = props.filtro
+    let reverb = props.reverb
+    let bitcrusher = props.bitcrusher
+    const [reverbON, setReverbON] = react.useState()
+
+    react.useEffect(() => {
+        if (props.reverbONREF.current === false) {
+            setReverbON(false)
+        } else {setReverbON(true)}}, []
+    )
+
+
+    function interruptorReverb(e) {
+        if (props.reverbONREF.current === false) {
+
+            props.reverbONREF.current = true
+            setReverbON(true)
+            
+            reverb.current = new Tone.Freeverb({wet:1})
+            fuente.current.disconnect()
+            
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                filtro.current.disconnect()
+            }
+           
+            
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    fuente.current.chain(filtro.current, bitcrusher.current, reverb.current, Tone.Destination)
+                } else {
+                    fuente.current.chain(filtro.current, reverb.current, Tone.Destination)
+                }
+
+            } else {
+                if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    fuente.current.chain(bitcrusher.current, reverb.current, Tone.Destination)
+                } else {
+                    fuente.current.chain(reverb.current, Tone.Destination)
+                }
+            }
+        } else {
+            
+            props.reverbONREF.current = false
+            setReverbON(false)
+            reverb.current.dispose()
+            fuente.current.disconnect()
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                filtro.current.disconnect()
+            }
+            if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                bitcrusher.current.disconnect()
+            }
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    fuente.current.chain(filtro.current,  bitcrusher.current, Tone.Destination)
+                } else {
+                    fuente.current.chain(filtro.current, Tone.Destination)
+                }
+
+            } else {
+                if (bitcrusher.current !== null && bitcrusher.current.disposed === false) {
+                    fuente.current.chain(bitcrusher.current, Tone.Destination)
+                } else {
+                    fuente.current.toDestination()
+                }
+            }
+        }
+    }
+
+
+    if (reverbON === true) {
+        return(
+            <div class = "label">
+                    <label for = "reverb">Reverb</label>
+                    <button id ="reverb" onClick={interruptorReverb} style={{color:"green", border: "1vh solid green", backgroundColor: "rgb(25,25,25)"}}>On</button>
+                </div>
+        )
+    } else {
+        return(
+            <div class = "label">
+                    <label for = "reverb">Reverb</label>
+                    <button id ="reverb" onClick={interruptorReverb} style={{ color:"red", border: "1vh solid red", backgroundColor: "rgb(25,25,25)"}}>Off</button>
+                </div>
+        )
+    }
+    
+}
+
+function BotonBitcrusher(props){
+    let fuente = props.fuente
+    let filtro = props.filtro
+    let reverb = props.reverb
+    let bitcrusher = props.bitcrusher
+    const [bitcrusherON, setBitcrusherON] = react.useState()
+
+    react.useEffect(() => {
+        if (props.bitcrusherONREF.current === false) {
+            setBitcrusherON(false)
+        } else {setBitcrusherON(true)}}, []
+    )
+
+    function interruptorBitcrusher(e) {
+
+        if (bitcrusherON === false) {
+            
+           
+            props.bitcrusherONREF.current = true
+            setBitcrusherON(true)
+            console.log(props.bitcrusherON)
+           
+
+            bitcrusher.current = new Tone.Chebyshev({wet:1})
+            fuente.current.disconnect()
+            
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                filtro.current.disconnect()
+            }
+            
+            
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    fuente.current.chain(filtro.current, bitcrusher.current, reverb.current, Tone.Destination)
+                } else {
+                    fuente.current.chain(filtro.current, bitcrusher.current, Tone.Destination)
+                }
+
+            } else {
+                fuente.current.connect(bitcrusher.current)
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    bitcrusher.current.chain(reverb.current, Tone.Destination)
+                } else {
+                    bitcrusher.current.toDestination()
+                }
+            }
+            
+        } else {
+           
+            props.bitcrusherONREF.current = false
+            setBitcrusherON(false)
+            bitcrusher.current.dispose()
+            fuente.current.disconnect()
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                filtro.current.disconnect()
+            }
+            if (reverb.current !== null && reverb.current.disposed === false) {
+                reverb.current.disconnect()
+            }
+            
+            if (filtro.current !== null && filtro.current.disposed === false) {
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    fuente.current.chain(filtro.current,  reverb.current, Tone.Destination)
+                } else {
+                    fuente.current.chain(filtro.current, Tone.Destination)
+                }
+
+            } else {
+                if (reverb.current !== null && reverb.current.disposed === false) {
+                    fuente.current.chain(reverb.current, Tone.Destination)
+                } else {
+                    fuente.current.toDestination()
+                }
+            }
+        }
+
+    }
+    
+
+    if (bitcrusherON === true) {
+        return(
+            <div class = "label">
+                    <label for = "reverb">Distorsión</label>
+                    <button id ="reverb" onClick={interruptorBitcrusher} style={{color:"green", border: "1vh solid green", backgroundColor: "rgb(25,25,25)"}}>On</button>
+                </div>
+        )
+    } else {
+        return(
+            <div class = "label">
+                    <label for = "bitcrusher">Distorsión</label>
+                    <button id ="bitcrusher" onClick={interruptorBitcrusher} style={{ color:"red", border: "1vh solid red", backgroundColor: "rgb(25,25,25)"}}>Off</button>
+                </div>
+        )
+    }
+    
+}
