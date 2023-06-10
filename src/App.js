@@ -517,7 +517,7 @@ function Pad(props){
 
     
     return(
-        <canvas id = {props.id} onTouchStart={padOnTouchStart} onTouchMove={padOnTouchMove} onTouchEnd={padOnTouchEnd} ></canvas>
+        <canvas id = {props.id} className='prevent-select' onTouchStart={padOnTouchStart} onTouchMove={padOnTouchMove} onTouchEnd={padOnTouchEnd} ></canvas>
     )
 
 }
@@ -1279,8 +1279,7 @@ function MenuFiltros(props) {
 // Efectos
 function MenuEfectos(props) {
 
-    // añadir dampening
-    // vincular todo el tema de los botones a estado
+    
 
 let fuente
 let filtro
@@ -1293,6 +1292,7 @@ let bitcrusherON
 const [displayBits, setDisplayBits] = react.useState(1)
 const [displayDecay, setDisplayDecay] = react.useState(0.5)
 const [displayWet, setDisplayWet] = react.useState(50)
+const [displayDampening, setDisplayDampening] = react.useState(3000)
 
 
 
@@ -1342,6 +1342,7 @@ if (props.numeroMenu === 6) {bitcrusherON = props.bitcrusherON6}
         if (reverb.current !== null) {
             setDisplayWet(reverb.current.wet.value)
             setDisplayDecay(reverb.current.roomSize.value)
+            setDisplayDampening(reverb.current.dampening)
         } 
         if (bitcrusher.current !== null) {
             setDisplayBits(bitcrusher.current.order)
@@ -1364,10 +1365,15 @@ if (props.numeroMenu === 6) {bitcrusherON = props.bitcrusherON6}
         setDisplayDecay(valor)
     }
 
+    function cambioDampening(e) {
+        reverb.current.set({dampening: e.target.value})
+        setDisplayDampening(e.target.value)
+    }
+
     function cambioWet(e) {
         let valor = e.target.value/100
         reverb.current.set({wet: valor})
-        setDisplayWet(e.target.value)
+        setDisplayWet(valor)
     }
 
     return(
@@ -1384,12 +1390,16 @@ if (props.numeroMenu === 6) {bitcrusherON = props.bitcrusherON6}
             <BotonReverb reverbONREF = {reverbON} 
             fuente = {fuente} 
             filtro = {filtro} bitcrusher = {bitcrusher} reverb = {reverb}/>
+            <div class = "label" id = "labelDecay">
+                <label for = "decay">{"Tamaño = " + displayDecay}</label>
+                <input id = "decay" type= "range" min = "1" max = "100" onChange={cambioDecay}></input>
+            </div>
             <div class = "label" id = "labelDamp">
-                <label for = "dampening">{"Tamaño = " + displayDecay}</label>
-                <input id = "dampening" type= "range" min = "1" max = "100" onChange={cambioDecay}></input>
+                <label for = "dampening">{"Dampening = " + displayDampening}</label>
+                <input id = "dampening" type= "range" min = "1" max = "12000" onChange={cambioDampening}></input>
             </div>
             <div class = "label" id = "labelRoom">    
-                <label for = "room">{"Cantidad = " + displayWet + "%"}</label>
+                <label for = "room">{"Cantidad = " + displayWet * 100 + "%"}</label>
                 <input id = "room" type= "range" min = "0" max = "100" onChange={cambioWet}></input>
             </div>
         </div>
