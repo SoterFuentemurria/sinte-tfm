@@ -375,7 +375,7 @@ function Pad(props){
 
     // Función callback para cuando se inicia un toque
     function padOnTouchStart(event) {
-        
+        console.log("funciona")
         if (!editar) {
         canvas = document.getElementById(props.id)
         rect = canvas.getBoundingClientRect()
