@@ -18,12 +18,7 @@ import {} from "@fortawesome/free-regular-svg-icons"
 // Variables Globales
 let editar = true
 
-let nota1 = "C4"
-let nota2 = "D4"
-let nota3 = "E4"
-let nota4 = "G4"
-let nota5 = "A4"
-let nota6 = "C5"
+
 
 
 
@@ -83,8 +78,25 @@ let numeroXY = react.useRef(null)
 
 let displayTipoFiltro = react.useRef(null)
 
-let bitcrusherON = react.useRef(null)
-let reverbON = react.useRef(null)
+let bitcrusherON1 = react.useRef(null)
+let reverbON1 = react.useRef(null)
+let bitcrusherON2 = react.useRef(null)
+let reverbON2 = react.useRef(null)
+let bitcrusherON3 = react.useRef(null)
+let reverbON3 = react.useRef(null)
+let bitcrusherON4 = react.useRef(null)
+let reverbON4 = react.useRef(null)
+let bitcrusherON5 = react.useRef(null)
+let reverbON5 = react.useRef(null)
+let bitcrusherON6 = react.useRef(null)
+let reverbON6 = react.useRef(null)
+
+let nota1 = react.useRef("C4")
+let nota2 = react.useRef("D4")
+let nota3 = react.useRef("E4")
+let nota4 = react.useRef("G4")
+let nota5 = react.useRef("A4")
+let nota6 = react.useRef("C5")
 
 
 
@@ -121,8 +133,18 @@ react.useEffect(()=> {
     paramY6.current = ""
 
     displayTipoFiltro.current = "Elige el tipo de filtro"
-    reverbON.current = false
-    bitcrusherON.current = false
+    reverbON1.current = false
+    bitcrusherON1.current = false
+    reverbON2.current = false
+    bitcrusherON2.current = false
+    reverbON3.current = false
+    bitcrusherON3.current = false
+    reverbON4.current = false
+    bitcrusherON4.current = false
+    reverbON5.current = false
+    bitcrusherON5.current = false
+    reverbON6.current = false
+    bitcrusherON6.current = false
 
     getOrientation()
 }, [])
@@ -138,7 +160,14 @@ const [numeroMenu, setNumeroMenu] = react.useState()
 async function iniciar() {
     await Tone.start()
     console.log("ready")
-    document.documentElement.requestFullscreen()
+    
+    if (document.documentElement.requestFullScreen) {
+        document.documentElement.requestFullScreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullScreen) {
+        document.documentElement.webkitRequestFullScreen();
+    }
     setReady(true)
 }
 
@@ -260,7 +289,11 @@ return (
     filtro4 = {filtro4} filtro5 = {filtro5} filtro6 = {filtro6} bitcrusher1 = {bitcrusher1}  bitcrusher2 = {bitcrusher2} 
     bitcrusher3 = {bitcrusher3}  bitcrusher4 = {bitcrusher4}  bitcrusher5 = {bitcrusher5}  bitcrusher6 = {bitcrusher6} 
     reverb1 = {reverb1} reverb2 = {reverb2} reverb3 = {reverb3} reverb4 = {reverb4} reverb5 = {reverb5} reverb6 = {reverb6} 
-    displayTipoFiltro = {displayTipoFiltro} bitcrusherON = {bitcrusherON} reverbON = {reverbON}/>)
+    displayTipoFiltro = {displayTipoFiltro} bitcrusherON1 = {bitcrusherON1} reverbON1 = {reverbON1} 
+    bitcrusherON2 = {bitcrusherON2} reverbON2 = {reverbON2} bitcrusherON3 = {bitcrusherON3} reverbON3 = {reverbON3}
+    bitcrusherON4 = {bitcrusherON4} reverbON4 = {reverbON4} bitcrusherON5 = {bitcrusherON5} reverbON5 = {reverbON5}
+    bitcrusherON6 = {bitcrusherON6} reverbON6 = {reverbON6} nota1 = {nota1} 
+    nota2 = {nota2} nota3 = {nota3} nota4 = {nota4} nota5 = {nota5} nota6 = {nota6}/>)
 }
 }}}}
 
@@ -311,11 +344,7 @@ function Pad(props){
         wetSeteado = props.reverb.current.wet.value
     }}
 
-    let bitsSeteado
-    if (props.bitcrusher.current !== null) {
-    if (props.bitcrusher.current.order.value !== undefined) {
-        bitsSeteado = props.bitcrusher.current.order.value
-    }}
+   
     
 
 
@@ -392,14 +421,7 @@ function Pad(props){
             let cutoff = convertRange(toque[1], rangoy, [0, cutoffSeteado])
             props.filtro.current.set({frequency: cutoff})
         }
-        if (props.paramX.current === "bits") {
-            let bits = convertRange(toque[0], rangox, [1, bitsSeteado])
-            props.bitcrusher.current.set({order: bits})
-        }
-        if (props.paramY.current === "bits") {
-            let bits = convertRange(toque[1], rangoy, [1, bitsSeteado])
-            props.bitcrusher.current.set({order: bits})
-        }
+      
         if (props.paramX.current === "tiempo") {
             let decay = convertRange(toque[0], rangox, [0.001, decaySeteado])
             props.reverb.current.set({decay: decay})
@@ -417,12 +439,7 @@ function Pad(props){
             props.reverb.current.set({wet: wet})
         }
 
-
-       
-
-        
-        
-        props.fuente.current.triggerAttack(window["nota" + props.numeroPad], Tone.now(), 1)
+        props.fuente.current.triggerAttack(props.nota.current, Tone.now(), 1)
  
         } else {
           props.setMenu(true)
@@ -474,14 +491,6 @@ function Pad(props){
             let cutoff = convertRange(toque[1], rangoy, [0, cutoffSeteado])
             props.filtro.current.set({frequency: cutoff})
         }
-        if (props.paramX.current === "bits") {
-            let bits = convertRange(toque[0], rangox, [1, bitsSeteado])
-            props.bitcrusher.current.set({order: bits})
-        }
-        if (props.paramY.current === "bits") {
-            let bits = convertRange(toque[1], rangoy, [1, bitsSeteado])
-            props.bitcrusher.current.set({order: bits})
-        }
       
         if (props.paramX.current === "wet") {
             let wet = convertRange(toque[0], rangox, [0, wetSeteado])
@@ -498,7 +507,7 @@ function Pad(props){
     function padOnTouchEnd() {
         
         if (props.fuente.current.harmonicity === undefined) {
-        props.fuente.current.triggerRelease(window["nota" + props.numeroPad],Tone.now())
+        props.fuente.current.triggerRelease(props.nota.current ,Tone.now())
         } else {
         props.fuente.current.triggerRelease(Tone.now())
         }
@@ -641,7 +650,12 @@ function Menu(props) {
             bitcrusher2 = {props.bitcrusher2} bitcrusher3 = {props.bitcrusher3}  bitcrusher4 = {props.bitcrusher4}  
             bitcrusher5 = {props.bitcrusher5}  bitcrusher6 = {props.bitcrusher6} reverb1 = {props.reverb1} reverb2 = {props.reverb2} 
             reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6} 
-            displayTipoFiltro = {props.displayTipoFiltro} bitcrusherON = {props.bitcrusherON} reverbON = {props.reverbON}/>
+            displayTipoFiltro = {props.displayTipoFiltro} bitcrusherON1 = {props.bitcrusherON1} reverbON1 = {props.reverbON1} 
+            bitcrusherON2 = {props.bitcrusherON2} reverbON2 = {props.reverbON2} bitcrusherON3 = {props.bitcrusherON3} reverbON3 = {props.reverbON3}
+            bitcrusherON4 = {props.bitcrusherON4} reverbON4 = {props.reverbON4} bitcrusherON5 = {props.bitcrusherON5} reverbON5 = {props.reverbON5}
+            bitcrusherON6 = {props.bitcrusherON6} reverbON6 = {props.reverbON6}
+            nota1 = {props.nota1} nota2 = {props.nota2} nota3 = {props.nota3} nota4 = {props.nota4} nota5 = {props.nota5} 
+            nota6 = {props.nota6}/>
         </div>)
 }
 
@@ -658,7 +672,8 @@ function DisplayMenu(props) {
             filtro4 = {props.filtro4} filtro5 = {props.filtro5} filtro6 = {props.filtro6} bitcrusher1 = {props.bitcrusher1}  
             bitcrusher2 = {props.bitcrusher2} bitcrusher3 = {props.bitcrusher3}  bitcrusher4 = {props.bitcrusher4}  
             bitcrusher5 = {props.bitcrusher5}  bitcrusher6 = {props.bitcrusher6} reverb1 = {props.reverb1} reverb2 = {props.reverb2} 
-            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6} />)
+            reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6} nota1 = {props.nota1} nota2 = {props.nota2} nota3 = {props.nota3} nota4 = {props.nota4} nota5 = {props.nota5} 
+            nota6 = {props.nota6}/>)
     }
     if (props.pestaña === "ADSR"){
         return(<MenuADSR numeroMenu = {props.numeroMenu} fuente1 = {props.fuente1} fuente2 = {props.fuente2} fuente3 = {props.fuente3} fuente4 = {props.fuente4} 
@@ -680,7 +695,10 @@ function DisplayMenu(props) {
             bitcrusher2 = {props.bitcrusher2} bitcrusher3 = {props.bitcrusher3}  bitcrusher4 = {props.bitcrusher4}  
             bitcrusher5 = {props.bitcrusher5}  bitcrusher6 = {props.bitcrusher6} reverb1 = {props.reverb1} reverb2 = {props.reverb2} 
             reverb3 = {props.reverb3} reverb4 = {props.reverb4} reverb5 = {props.reverb5} reverb6 = {props.reverb6}
-            bitcrusherON = {props.bitcrusherON} reverbON = {props.reverbON}/>)
+            bitcrusherON1 = {props.bitcrusherON1} reverbON1 = {props.reverbON1} 
+            bitcrusherON2 = {props.bitcrusherON2} reverbON2 = {props.reverbON2} bitcrusherON3 = {props.bitcrusherON3} reverbON3 = {props.reverbON3}
+            bitcrusherON4 = {props.bitcrusherON4} reverbON4 = {props.reverbON4} bitcrusherON5 = {props.bitcrusherON5} reverbON5 = {props.reverbON5}
+            bitcrusherON6 = {props.bitcrusherON6} reverbON6 = {props.reverbON6}/>)
     }
 }
 
@@ -786,7 +804,8 @@ function MenuFuenteSonora(props) {
                 </div>
                 <MenuSinte numeroMenu = {props.numeroMenu}
             fuente1 = {props.fuente1} fuente2 = {props.fuente2} fuente3 = {props.fuente3} fuente4 = {props.fuente4} 
-            fuente5 = {props.fuente5} fuente6 = {props.fuente6} />
+            fuente5 = {props.fuente5} fuente6 = {props.fuente6} nota1 = {props.nota1} nota2 = {props.nota2} nota3 = {props.nota3} nota4 = {props.nota4} nota5 = {props.nota5} 
+            nota6 = {props.nota6}/>
             </div>
         )
     }
@@ -799,7 +818,8 @@ function MenuFuenteSonora(props) {
                 <button id = "botonAbrirSamplerPulsado" onClick={abrirSampler}>Sampler</button>
                 </div>
                 <MenuSampler numeroMenu = {props.numeroMenu}  fuente1 = {props.fuente1} fuente2 = {props.fuente2} fuente3 = {props.fuente3} fuente4 = {props.fuente4} 
-            fuente5 = {props.fuente5} fuente6 = {props.fuente6} filtro = {filtro} reverb = {reverb} bitcrusher={bitcrusher}/>
+            fuente5 = {props.fuente5} fuente6 = {props.fuente6} filtro = {filtro} reverb = {reverb} bitcrusher={bitcrusher} nota1 = {props.nota1} nota2 = {props.nota2} nota3 = {props.nota3} nota4 = {props.nota4} nota5 = {props.nota5} 
+            nota6 = {props.nota6}/>
             </div>
         ) 
     } 
@@ -823,6 +843,7 @@ function MenuFuenteSonora(props) {
 function MenuSinte(props) {
     // parámetros. Carrier f, Carrier wave, harm, Mod f, Mod wave, Mod Ind
     let fuente
+    let nota
     const [displayHarm, setDisplayHarm] = react.useState(0.5)
     const [displayModI, setDisplayModI] = react.useState(50)
 
@@ -832,6 +853,13 @@ function MenuSinte(props) {
     if (props.numeroMenu === 4) {fuente = props.fuente4}
     if (props.numeroMenu === 5) {fuente = props.fuente5}
     if (props.numeroMenu === 6) {fuente = props.fuente6}
+
+    if (props.numeroMenu === 1) {nota = props.nota1}
+    if (props.numeroMenu === 2) {nota = props.nota2}
+    if (props.numeroMenu === 3) {nota = props.nota3}
+    if (props.numeroMenu === 4) {nota = props.nota4}
+    if (props.numeroMenu === 5) {nota = props.nota5}
+    if (props.numeroMenu === 6) {nota = props.nota6}
     
     //fuente.dispose()
     //fuente.connect(Tone.Destination)
@@ -845,7 +873,7 @@ function MenuSinte(props) {
 
     function cambioNota(e) {
         
-        window["nota" +  props.numeroMenu] = e.target.value
+        nota.current = e.target.value
         
         
     }
@@ -923,10 +951,17 @@ function MenuSinte(props) {
 // Si la fuente sonora es el sampler
 
 function MenuSampler(props) {
-
+    let nota
     let busqueda
     let resultados = react.useRef(null)
     const [seleccionSample, setSeleccionSample] = react.useState(false)
+
+    if (props.numeroMenu === 1) {nota = props.nota1}
+    if (props.numeroMenu === 2) {nota = props.nota2}
+    if (props.numeroMenu === 3) {nota = props.nota3}
+    if (props.numeroMenu === 4) {nota = props.nota4}
+    if (props.numeroMenu === 5) {nota = props.nota5}
+    if (props.numeroMenu === 6) {nota = props.nota6}
 
     function cambioBusqueda(e) {
         busqueda = e.target.value
@@ -934,16 +969,17 @@ function MenuSampler(props) {
     
     function cambioNota(e) {
         
-        window["nota" +  props.numeroMenu] = e.target.value
+        nota.current = e.target.value
         
         
     }
 
     async function buscar () {
-
+        nota.current = "C4"
         let url = "https://freesound.org/apiv2/search/text/?query=" + busqueda + "&sort=score&filter=duration:[* TO 10]&token="  + claveAPI 
         resultados.current = await (await fetch(url)).json()
         setSeleccionSample(true)
+        
         
     }
     if (!seleccionSample) {
@@ -983,62 +1019,100 @@ function MenuADSR(props) {
     if (props.numeroMenu === 5) {fuente = props.fuente5}
     if (props.numeroMenu === 6) {fuente = props.fuente6}
 
-    react.useEffect(()=> {
-        if (fuente.current !== null ) {
-            setDisplayAtaque(fuente.current.envelope.attack)
-            setDisplayDecay(fuente.current.envelope.decay)
-            setDisplaySustain(fuente.current.envelope.sustain)
-            setDisplayRelease(fuente.current.envelope.release)
+    if (fuente.current.envelope !== undefined) {
+        react.useEffect(()=> {
+            if (fuente.current !== null ) {
+                setDisplayAtaque(fuente.current.envelope.attack)
+                setDisplayDecay(fuente.current.envelope.decay)
+                setDisplaySustain(fuente.current.envelope.sustain)
+                setDisplayRelease(fuente.current.envelope.release)
+            }
+        }, [])
+    
+        function cambioAtaque(e) {
+            let valor = e.target.value / 100
+            fuente.current.set({envelope: {attack: valor}})
+            setDisplayAtaque(valor)
         }
-    }, [])
-
-    function cambioAtaque(e) {
-        let valor = e.target.value / 100
-        fuente.current.set({envelope: {attack: valor}})
-        setDisplayAtaque(valor)
-    }
-
-    function cambioDecay(e) {
-        let valor = e.target.value / 100
-        fuente.current.set({envelope: {decay: valor}})
-        setDisplayDecay(valor)
-    }
-
-    function cambioSustain(e) {
-        let valor = e.target.value / 100
-        fuente.current.set({envelope: {sustain: valor}})
-        setDisplaySustain(valor)
-    }
-
-    function cambioRelease(e) {
-        let valor = e.target.value / 100
-        fuente.current.set({envelope: {release:valor}})
-        setDisplayRelease(valor)
-    }
-    return(
-        <div id = "menuADSR">
-           <div> 
-                <div class = "label">
-                    <label for= "attack">{"Ataque = " + displayAtaque}</label>
-                    <input id= "attack" type="range" min="1" max="200" onChange={cambioAtaque}></input>
+    
+        function cambioDecay(e) {
+            let valor = e.target.value / 100
+            fuente.current.set({envelope: {decay: valor}})
+            setDisplayDecay(valor)
+        }
+    
+        function cambioSustain(e) {
+            let valor = e.target.value / 100
+            fuente.current.set({envelope: {sustain: valor}})
+            setDisplaySustain(valor)
+        }
+    
+        function cambioRelease(e) {
+            let valor = e.target.value / 100
+            fuente.current.set({envelope: {release:valor}})
+            setDisplayRelease(valor)
+        }
+        return(
+            <div id = "menuADSR">
+               <div> 
+                    <div class = "label">
+                        <label for= "attack">{"Ataque = " + displayAtaque}</label>
+                        <input id= "attack" type="range" min="1" max="200" onChange={cambioAtaque}></input>
+                    </div>
+                    <div class = "label">
+                        <label for= "decay">{"Decay = " + displayDecay}</label>
+                        <input id= "decay" type="range" min="0" max="200" onChange={cambioDecay}></input>  
+                    </div>
                 </div>
-                <div class = "label">
-                    <label for= "decay">{"Decay = " + displayDecay}</label>
-                    <input id= "decay" type="range" min="0" max="200" onChange={cambioDecay}></input>  
+                <div>
+                    <div class = "label">
+                        <label for= "sustain">{"Sustain = " + displaySustain}</label>
+                        <input id= "sustain" type="range" min="0" max="100" onChange={cambioSustain}></input>  
+                    </div>
+                    <div class = "label">
+                        <label for= "release">{"Release = " + displayRelease}</label>
+                        <input id= "release" type="range" min="0" max="200" onChange={cambioRelease}></input>   
+                    </div> 
                 </div>
             </div>
-            <div>
-                <div class = "label">
-                    <label for= "sustain">{"Sustain = " + displaySustain}</label>
-                    <input id= "sustain" type="range" min="0" max="100" onChange={cambioSustain}></input>  
+        ) 
+    } else {
+        react.useEffect(()=> {
+            if (fuente.current !== null ) {
+                setDisplayAtaque(fuente.current.attack)
+                setDisplayRelease(fuente.current.release)
+            }
+        }, [])
+    
+        function cambioAtaque(e) {
+            let valor = e.target.value / 100
+            fuente.current.set({attack: valor})
+            setDisplayAtaque(valor)
+        }
+    
+        function cambioRelease(e) {
+            let valor = e.target.value / 100
+            fuente.current.set({release:valor})
+            setDisplayRelease(valor)
+        }
+
+        return(
+            <div id = "menuADSR">
+               <div> 
+                    <div class = "label">
+                        <label for= "attack">{"Ataque = " + displayAtaque}</label>
+                        <input id= "attack" type="range" min="1" max="100" onChange={cambioAtaque}></input>
+                    </div>
+                    <div class = "label">
+                        <label for= "release">{"Release = " + displayRelease}</label>
+                        <input id= "release" type="range" min="0" max="100" onChange={cambioRelease}></input>   
+                    </div> 
                 </div>
-                <div class = "label">
-                    <label for= "release">{"Release = " + displayRelease}</label>
-                    <input id= "release" type="range" min="0" max="200" onChange={cambioRelease}></input>   
-                </div> 
             </div>
-        </div>
-    )
+        ) 
+    }
+
+
 }
 
 // Filtros
@@ -1210,13 +1284,14 @@ let fuente
 let filtro
 let bitcrusher
 let reverb
+let reverbON
+let bitcrusherON
 
 
 const [displayBits, setDisplayBits] = react.useState(1)
 const [displayDecay, setDisplayDecay] = react.useState(0.5)
 const [displayWet, setDisplayWet] = react.useState(50)
-const [reverbON, setReverbON] = react.useState(false)
-const [bitcrusherON, setBicrusherON] = react.useState(false)
+
 
 
 if (props.numeroMenu === 1) {fuente = props.fuente1}
@@ -1246,6 +1321,20 @@ if (props.numeroMenu === 3) {reverb = props.reverb3}
 if (props.numeroMenu === 4) {reverb = props.reverb4}
 if (props.numeroMenu === 5) {reverb = props.reverb5}
 if (props.numeroMenu === 6) {reverb = props.reverb6}
+
+if (props.numeroMenu === 1) {reverbON = props.reverbON1}
+if (props.numeroMenu === 2) {reverbON = props.reverbON2}
+if (props.numeroMenu === 3) {reverbON = props.reverbON3}
+if (props.numeroMenu === 4) {reverbON = props.reverbON4}
+if (props.numeroMenu === 5) {reverbON = props.reverbON5}
+if (props.numeroMenu === 6) {reverbON = props.reverbON6}
+
+if (props.numeroMenu === 1) {bitcrusherON = props.bitcrusherON1}
+if (props.numeroMenu === 2) {bitcrusherON = props.bitcrusherON2}
+if (props.numeroMenu === 3) {bitcrusherON = props.bitcrusherON3}
+if (props.numeroMenu === 4) {bitcrusherON = props.bitcrusherON4}
+if (props.numeroMenu === 5) {bitcrusherON = props.bitcrusherON5}
+if (props.numeroMenu === 6) {bitcrusherON = props.bitcrusherON6}
 
     react.useEffect(()=> {
         if (reverb.current !== null) {
@@ -1282,7 +1371,7 @@ if (props.numeroMenu === 6) {reverb = props.reverb6}
     return(
     <div id= "efectos">
         <div id = "efectosRow1">
-            <BotonBitcrusher  bitcrusherONREF = {props.bitcrusherON} fuente = {fuente} 
+            <BotonBitcrusher  bitcrusherONREF = {bitcrusherON} fuente = {fuente} 
             filtro = {filtro} bitcrusher = {bitcrusher} reverb = {reverb}/>
             <div class = "label" id = "labelBits">
                 <label for= "bits">{"Cantidad = " + displayBits}</label>
@@ -1290,7 +1379,7 @@ if (props.numeroMenu === 6) {reverb = props.reverb6}
             </div>
         </div>
         <div id = "efectosRow2">
-            <BotonReverb reverbONREF = {props.reverbON} 
+            <BotonReverb reverbONREF = {reverbON} 
             fuente = {fuente} 
             filtro = {filtro} bitcrusher = {bitcrusher} reverb = {reverb}/>
             <div class = "label" id = "labelDamp">
@@ -1364,7 +1453,6 @@ function MenuXY (props) {
                     <option value = "harm">Harmonicidad</option>
                     <option value = "modI">Indice de modulación</option>
                     <option value = "cut-off">Frecuencia Filtro</option>
-                    <option value = "bits">BitCrusher</option>
                     <option value = "tiempo">Tiempo de Reverb</option>
                     <option value = "wet">Cantidad de Reverb</option>
                 </select>
@@ -1377,7 +1465,6 @@ function MenuXY (props) {
                     <option value = "harm">Harmonicidad</option>
                     <option value = "modI">Indice de modulación</option>
                     <option value = "cut-off">Frecuencia Filtro</option>
-                    <option value = "bits">BitCrusher</option>
                     <option value = "tiempo">Tiempo de Reverb</option>
                     <option value = "wet">Cantidad de Reverb</option>
                 </select>
