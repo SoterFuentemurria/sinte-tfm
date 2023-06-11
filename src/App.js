@@ -1291,7 +1291,7 @@ let bitcrusherON
 
 const [displayBits, setDisplayBits] = react.useState(1)
 const [displayDecay, setDisplayDecay] = react.useState(0.5)
-const [displayWet, setDisplayWet] = react.useState(50)
+const [displayWet, setDisplayWet] = react.useState(0)
 const [displayDampening, setDisplayDampening] = react.useState(3000)
 
 
@@ -1460,25 +1460,27 @@ function MenuXY (props) {
             <div class = "label">
                 <label for = "x" >X</label>
                 <select id= "x" onChange={cambiarX}>
-                    <option value = "">-</option>
+                    <option value = "">Vincula un parámetro al eje X</option>
                     <option value = "volumen">Volumen</option>
                     <option value = "harm">Harmonicidad</option>
                     <option value = "modI">Indice de modulación</option>
                     <option value = "cut-off">Frecuencia Filtro</option>
                     <option value = "tiempo">Tiempo de Reverb</option>
                     <option value = "wet">Cantidad de Reverb</option>
+                    <option value = "">Desvincular eje X</option>
                 </select>
             </div>
             <div class = "label">
                 <label for = "y">Y</label>
                 <select id= "y" onChange={cambiarY}>
-                    <option value = "">-</option>
+                    <option value = "">Vincula un parámetro al eje Y</option>
                     <option value = "volumen">Volumen</option>
                     <option value = "harm">Harmonicidad</option>
                     <option value = "modI">Indice de modulación</option>
                     <option value = "cut-off">Frecuencia Filtro</option>
                     <option value = "tiempo">Tiempo de Reverb</option>
                     <option value = "wet">Cantidad de Reverb</option>
+                    <option value = "">Desvincular eje X</option>
                 </select>
             </div>
             <div id = "divBotonAceptarXY2" >
